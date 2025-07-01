@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Agendamento {
+  id           Int      @id @default(autoincrement())
+  servico      String
+  profissional String
+  data         String
+  horario      String
+  nome         String
+  criadoEm     DateTime @default(now())
+}
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  email    String   @unique
+  telefone String? // opcional
+  cpf      String? // opcional
+  senha    String
+  criadoEm DateTime @default(now())
+}
