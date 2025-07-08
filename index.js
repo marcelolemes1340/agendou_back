@@ -1,5 +1,5 @@
 import express, { json } from 'express';
-import cors from 'cors'; // permite requisições do front-end
+import cors from 'cors';
 import agendamentoRoutes from './routes/agendamentos.js';
 import usuarioRoutes from './routes/usuarios.js';
 
@@ -7,9 +7,8 @@ import usuarioRoutes from './routes/usuarios.js';
 const app = express();
 const port = 3001;
 
-// Middleware
 app.use(cors());
-app.use(json()); // para ler JSON no corpo das requisições
+app.use(json()); 
 
 // Rotas
 app.use('/agendamentos', agendamentoRoutes);

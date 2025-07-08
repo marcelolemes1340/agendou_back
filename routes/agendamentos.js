@@ -29,7 +29,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Rota para listar os agendamentos
 router.get('/', async (req, res) => {
     try {
         const agendamentos = await prisma.agendamento.findMany();
