@@ -23,7 +23,7 @@ router.post('/cadastro', async (req, res) => {
         res.status(201).json({ message: 'Usuário cadastrado com sucesso!', usuario: novoUsuario });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao cadastrar usuário.' });
+        res.status(500).json({ error: error.message  });
     }
 });
 
