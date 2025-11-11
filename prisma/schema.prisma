@@ -2,28 +2,53 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Agendamento {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   servico      String
   profissional String
   data         String
   horario      String
   nome         String
-  criadoEm     DateTime @default(now())
+  telefone     String?
+  email        String?
+  status       String    @default("pendente")
+  observacoes  String?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime? @updatedAt
 }
 
 model Usuario {
   id       Int      @id @default(autoincrement())
   nome     String
   email    String   @unique
-  telefone String? // opcional
-  cpf      String? // opcional
+  telefone String?
+  cpf      String?
   senha    String
+  isAdmin  Boolean  @default(false)
+  tipo     String   @default("cliente")
   criadoEm DateTime @default(now())
+}
+
+model Servico {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  descricao String?
+  preco     Float
+  duracao   Int
+  ativo     Boolean  @default(true)
+  criadoEm  DateTime @default(now())
+}
+
+model Barbeiro {
+  id            Int      @id @default(autoincrement())
+  nome          String
+  especialidade String?
+  ativo         Boolean  @default(true)
+  foto          String?
+  criadoEm      DateTime @default(now())
 }

@@ -1,67 +1,55 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// back-end/routes/usuarios.js (MODIFICADO)
 
-const router = express.Router();
-const prisma = new PrismaClient();
+import { Router } from 'express';
+// 🚨 1. CORRIGE A IMPORTAÇÃO: Use a instância centralizada
+import prisma from '../config/prisma.js';
+// 🚨 2. IMPORTAÇÃO DO MIDDLEWARE: Para proteger as rotas
+import { verifyAdmin } from '../middlewares/authMiddleware.js';
 
-router.post('/cadastro', async (req, res) => {
-    const { nome, email, telefone, cpf, senha } = req.body;
+const router = Router();
+// const prisma = new PrismaClient(); <--- REMOVA ESTA LINHA
 
+
+// Exemplo: Listar Usuários (Rota de Administrador)
+// 🔒 APLICAÇÃO DO MIDDLEWARE: SÓ ADMIN PODE VER A LISTA COMPLETA
+router.get('/', verifyAdmin, async (req, res) => {
     try {
-        const usuarioExistente = await prisma.usuario.findUnique({
-            where: { email },
+        const usuarios = await prisma.usuario.findMany({
+            // Excluir a senha por segurança ao retornar a lista
+            select: {
+                id: true,
+                nome: true,
+                email: true,
+                telefone: true,
+                cpf: true,
+                tipo: true,
+                criadoEm: true
+            },
+            orderBy: {
+                criadoEm: 'desc'
+            }
         });
-
-        if (usuarioExistente) {
-            return res.status(400).json({ error: 'Email já cadastrado.' });
-        }
-
-        const novoUsuario = await prisma.usuario.create({
-            data: { nome, email, telefone, cpf, senha },
-        });
-
-        res.status(201).json({ message: 'Usuário cadastrado com sucesso!', usuario: novoUsuario });
+        return res.json(usuarios);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: error.message  });
-    }
-});
-
-router.get('/', async (req, res) => {
-    try {
-        const usuarios = await prisma.usuario.findMany();
-        res.json(usuarios);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erro ao buscar usuários.' });
-    }
-});
-
-router.post('/login', async (req, res) => {
-    const { email, senha } = req.body;
-
-    try {
-        const usuario = await prisma.usuario.findUnique({
-            where: { email },
-        });
-
-        if (!usuario) {
-            return res.status(401).json({ error: 'Email ou senha incorretos.' });
-        }
-
-        if (usuario.senha !== senha) {
-            return res.status(401).json({ error: 'Email ou senha incorretos.' });
-        }
-
-        const { senha: _, ...usuarioSemSenha } = usuario;
-
-        res.json({ message: 'Login bem-sucedido!', usuario: usuarioSemSenha });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erro ao realizar login.' });
+        return res.status(500).json({ error: 'Erro ao buscar usuários' });
     }
 });
 
 
+// Exemplo: Criar Usuário (Deve ser a rota de registro do cliente, PÚBLICA)
+router.post('/', async (req, res) => {
+    // ⚠️ Lógica de validação e hashing de senha deve ser aplicada aqui.
+    // ...
+});
+
+
+// Exemplo: Deletar Usuário (Apenas Admin)
+// 🔒 ROTA PROTEGIDA
+router.delete('/:id', verifyAdmin, async (req, res) => {
+    // ... lógica de exclusão ...
+});
+
+
+// ... Adicione o restante das suas rotas de usuários aqui (ex: GET /:id, PATCH /:id) ...
 
 export default router;
