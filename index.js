@@ -43,7 +43,7 @@ function iniciarAgendamentoLembretes() {
 }
 
 app.use(cors({
-    origin: ['http://localhost:3000','https://agendou-nine.vercel.app/','http://agendou-nine.vercel.app/', 'http://localhost:3002'],
+    origin: ['http://localhost:3000','https://agendou-nine.vercel.app','http://agendou-nine.vercel.app', 'http://localhost:3002'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
