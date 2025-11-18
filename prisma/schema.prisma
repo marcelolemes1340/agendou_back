@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,8 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Avaliacao {
+  id            Int      @id @default(autoincrement())
+  agendamentoId Int      @unique
+  nota          Int 
+  comentario    String?
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  agendamento Agendamento @relation(fields: [agendamentoId], references: [id], onDelete: Cascade)
+
+  @@map("avaliacoes")
+}
+
 model Agendamento {
-  id           Int       @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   servico      String
   profissional String
   data         String
@@ -16,10 +30,13 @@ model Agendamento {
   nome         String
   telefone     String?
   email        String?
-  status       String    @default("pendente")
+  status       String     @default("pendente")
   observacoes  String?
-  criadoEm     DateTime  @default(now())
-  atualizadoEm DateTime? @updatedAt
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime?  @updatedAt
+  avaliacao    Avaliacao?
+
+  @@map("agendamentos")
 }
 
 model Usuario {
@@ -32,6 +49,8 @@ model Usuario {
   isAdmin  Boolean  @default(false)
   tipo     String   @default("cliente")
   criadoEm DateTime @default(now())
+
+  @@map("usuarios")
 }
 
 model Servico {
@@ -42,6 +61,8 @@ model Servico {
   duracao   Int
   ativo     Boolean  @default(true)
   criadoEm  DateTime @default(now())
+
+  @@map("servicos")
 }
 
 model Barbeiro {
@@ -51,4 +72,6 @@ model Barbeiro {
   ativo         Boolean  @default(true)
   foto          String?
   criadoEm      DateTime @default(now())
+
+  @@map("barbeiros")
 }

@@ -1,4 +1,4 @@
--- CreateTable
+
 CREATE TABLE "Agendamento" (
     "id" SERIAL NOT NULL,
     "servico" TEXT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE "Agendamento" (
     CONSTRAINT "Agendamento_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+
 CREATE TABLE "Usuario" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
@@ -24,5 +24,5 @@ CREATE TABLE "Usuario" (
     CONSTRAINT "Usuario_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
